@@ -1,17 +1,12 @@
-/* eslint-disable no-empty-pattern */
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    
-}
+const initialState = {};
 
-const messages = createSlice({
-    name: 'messages',
+const messagesSlice = createSlice({
+    name: "messages",
     initialState,
-    reducers: {
-        
-    }
-})
+    reducers: {},
+});
 
-export const { } = messages.actions;
-export default messages.reducer;
+export const { } = messagesSlice.actions;
+export default messagesSlice.reducer;

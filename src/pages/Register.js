@@ -1,50 +1,68 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/images/lws-logo-light.svg";
-import { useEffect, useState } from "react";
-import { useRegisterMutation } from "../features/auth/authApi";
 import Error from "../components/ui/Error";
+import { useRegisterMutation } from "../features/auth/authApi";
+import { useDispatch } from "react-redux";
+import { userLoggedIn } from "../features/auth/authSlice";
 
 export default function Register() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [agreed, setAgreed] = useState(false);
-    const[error,setError] = useState('')
+    const [error, setError] = useState("");
 
-
-    const [register, { data, isLoading, error: responseError }] = useRegisterMutation();
+    const [register, { data, isLoading, error: responseError }] =
+        useRegisterMutation();
+    const dispatch = useDispatch();
     
+    
+    console.log(data);
 
     const navigate = useNavigate();
-    
 
     useEffect(() => {
         if (responseError?.data) {
-            setError(responseError.data)
+            setError(responseError.data);
         }
         if (data?.accessToken && data?.user) {
             navigate("/inbox");
+            localStorage.setItem(
+                "auth",
+                JSON.stringify({
+                  accessToken: data.accessToken,
+                  user: data.user,
+                })
+              );
+    
+            dispatch(
+                userLoggedIn({
+                  accessToken: data.accessToken,
+                  user: data.user,
+                })
+              );
         }
-    }, [data,responseError,navigate]);
+    }, [data, responseError, navigate,dispatch]);
 
-
-    const handleSubmit = e => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        setError('');
+
+        setError("");
+
         if (confirmPassword !== password) {
-            setPassword('Password do not match')
+            setError("Passwords do not match");
         } else {
             register({
                 name,
                 email,
-                password
-            })
+                password,
+            });
+            
         }
-    }
-    
+    };
 
-    
     return (
         <div className="grid place-items-center h-screen bg-[#F9FAFB">
             <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -61,8 +79,7 @@ export default function Register() {
                             Create your account
                         </h2>
                     </div>
-                    <form onSubmit={handleSubmit}  className="mt-8 space-y-6"  method="POST">
-                        <input type="hidden" name="remember" value="true" />
+                    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
                                 <label htmlFor="name" className="sr-only">
@@ -77,7 +94,7 @@ export default function Register() {
                                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
                                     placeholder="Name"
                                     value={name}
-                                    onChange={(e)=>setName(e.target.value)}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
 
@@ -97,7 +114,7 @@ export default function Register() {
                                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
                                     placeholder="Email address"
                                     value={email}
-                                    onChange={(e)=>setEmail(e.target.email)}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
 
@@ -114,7 +131,9 @@ export default function Register() {
                                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
                                     placeholder="Password"
                                     value={password}
-                                    onChange={(e)=>setPassword(e.target.password)}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                 />
                             </div>
 
@@ -128,13 +147,15 @@ export default function Register() {
                                 <input
                                     id="confirmPassword"
                                     name="confirmPassword"
-                                    type="confirmPassword"
+                                    type="password"
                                     autoComplete="current-confirmPassword"
                                     required
                                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-violet-500 focus:border-violet-500 focus:z-10 sm:text-sm"
                                     placeholder="confirmPassword"
                                     value={confirmPassword}
-                                    onChange={(e)=>setConfirmPassword(e.target.confirmPassword)}
+                                    onChange={(e) =>
+                                        setConfirmPassword(e.target.value)
+                                    }
                                 />
                             </div>
                         </div>
@@ -146,9 +167,11 @@ export default function Register() {
                                     name="agree"
                                     type="checkbox"
                                     className="h-4 w-4 text-violet-600 focus:ring-violet-500 border-gray-300 rounded"
-                                    required
                                     checked={agreed}
-                                    onChange={(e)=>setAgreed(e.target.agreed)}
+                                    required
+                                    onChange={(e) =>
+                                        setAgreed(e.target.checked)
+                                    }
                                 />
                                 <label
                                     htmlFor="accept-terms"
@@ -169,7 +192,8 @@ export default function Register() {
                                 Sign up
                             </button>
                         </div>
-                        {error !== '' && <Error message={error} />}
+
+                        {error !== "" && <Error message={error} />}
                     </form>
                 </div>
             </div>
