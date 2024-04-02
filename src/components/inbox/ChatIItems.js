@@ -1,11 +1,11 @@
 import gravatarUrl from "gravatar-url";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { useGetConversationsQuery } from "../../features/conversations/conversationsApi";
 import getPartnerInfo from "../../utils/getPartnerInfo";
 import Error from "../ui/Error";
 import ChatItem from "./ChatItem";
+import { useNavigate } from "react-router-dom";
 
 export default function ChatItems() {
   const { user } = useSelector((state) => state.auth) || {};
@@ -16,6 +16,7 @@ export default function ChatItems() {
     isError,
     error,
   } = useGetConversationsQuery(email);
+  const navigate = useNavigate();
 
   // decide what to render
   let content = null;
@@ -40,9 +41,8 @@ export default function ChatItems() {
       );
 
       return (
-        <li key={id}>
-          <Link to={`/inbox/${id}`}>
-            <ChatItem
+        <li key={id} onClick={()=>navigate(`/inbox/${id}`)}>
+          <ChatItem 
               avatar={gravatarUrl(partnerEmail, {
                 size: 80,
               })}
@@ -50,7 +50,6 @@ export default function ChatItems() {
               lastMessage={message}
               lastTime={moment(timestamp).fromNow()}
             />
-          </Link>
         </li>
       );
     });

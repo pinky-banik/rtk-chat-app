@@ -21,7 +21,8 @@ function UseAuthCheck() {
             }
         }
         setAuthChecked(true);
-    }, [dispatch,setAuthChecked])
+    }, [dispatch, setAuthChecked])
+    
     
     return authChecked;
 }
