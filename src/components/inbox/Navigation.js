@@ -1,13 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logoImage from "../../assets/images/lws-logo-dark.svg";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../features/auth/authSlice";
 
 export default function Navigation() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const logout = () => {
-        dispatch(userLoggedOut);
+        dispatch(userLoggedOut());
         localStorage.clear();
     }
     return (
