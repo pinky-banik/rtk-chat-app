@@ -4,7 +4,6 @@ import logoImage from "../assets/images/lws-logo-light.svg";
 import Error from "../components/ui/Error";
 import { useLoginMutation } from "../features/auth/authApi";
 import { useDispatch, useSelector } from "react-redux";
-import { userLoggedIn } from "../features/auth/authSlice";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -34,12 +33,7 @@ export default function Login() {
                 })
               );
     
-            dispatch(
-                userLoggedIn({
-                  accessToken: data.accessToken,
-                  user: data.user,
-                })
-              );
+            
         }
         
     }, [data, responseError, navigate,dispatch]);

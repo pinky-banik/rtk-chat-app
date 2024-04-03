@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/images/lws-logo-light.svg";
 import Error from "../components/ui/Error";
 import { useRegisterMutation } from "../features/auth/authApi";
-import { useDispatch } from "react-redux";
-import { userLoggedIn } from "../features/auth/authSlice";
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -16,7 +14,6 @@ export default function Register() {
 
     const [register, { data, isLoading, error: responseError }] =
         useRegisterMutation();
-    const dispatch = useDispatch();
     
     
     console.log(data);
@@ -37,14 +34,9 @@ export default function Register() {
                 })
               );
     
-            dispatch(
-                userLoggedIn({
-                  accessToken: data.accessToken,
-                  user: data.user,
-                })
-              );
+           
         }
-    }, [data, responseError, navigate,dispatch]);
+    }, [data, responseError, navigate]);
 
     const handleSubmit = async(e) => {
         e.preventDefault();

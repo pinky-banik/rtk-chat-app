@@ -8,7 +8,6 @@ import {
 import { useGetUserQuery } from "../../features/users/usersApi";
 import isValidEmail from "../../utils/isValidEmail";
 import Error from "../ui/Error";
-import { messagesApi } from "../../features/messages/messagesApi";
 
 export default function Modal({ open, control }) {
   const [to, setTo] = useState("");
@@ -99,15 +98,6 @@ export default function Modal({ open, control }) {
           timestamp,
         },
       });
-     dispatch(
-        messagesApi.endpoints.addMessage.initiate({
-          conversationId: conversation[0].id,
-          sender: loggedInUser,
-          receiver: participant[0],
-          message,
-          timestamp,
-        })
-      );
     } else if (conversation?.length === 0) {
       // add conversation
       addConversation({
