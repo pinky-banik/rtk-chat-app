@@ -15,8 +15,6 @@ export default function Register() {
     const [register, { data, isLoading, error: responseError }] =
         useRegisterMutation();
     
-    
-    console.log(data);
 
     const navigate = useNavigate();
 
